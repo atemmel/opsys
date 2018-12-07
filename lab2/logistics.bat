@@ -1,6 +1,7 @@
 @echo off
 setlocal EnableDelayedExpansion
-chcp 65001>nul
+::chcp 65001>nul
+chcp 1252>nul
 
 set file=windata.txt
 set width=6
@@ -19,8 +20,16 @@ set col_to_read=
 			set mat_%%a_%%b=!arr_%%b!
 		)
 	)
+
+	set col_to_read=0
+	call :OPEN_FILE
 	
-	goto :PRINT_MAT
+	call :BUBBLE
+	
+	call :PRINT_MAT
+	
+	::call :PRINT_ARR
+
 	goto :EOF
 :OPEN_FILE_MATRIX_END
 
@@ -43,9 +52,7 @@ goto EXIT
 		for /l %%b in (0,1,%length%) do (	
 			set j=%%b
 			if /i !arr_%%a! LSS !arr_%%b! (
-				set tmp=!arr_%%a!
-				set arr_!i!=!arr_%%b!
-				set arr_!j!=!tmp!
+				call :SWAP
 			)
 		)
 	)
@@ -53,9 +60,13 @@ goto EXIT
 :BUBBLE_END
 
 :SWAP
+	set tmp=!arr_%i%!
+	set arr_%i%=!arr_%j%!
+	set arr_%j%=!tmp!
 	for /l %%x in (0,1,%width%) do (
 		set tmp=!mat_%%x_%i%!
-		echo !tmp!
+		set mat_%%x_%i%=!mat_%%x_%j%!
+		set mat_%%x_%j%=!tmp!
 	)
 	goto :EOF
 :SWAP_END
@@ -66,7 +77,7 @@ goto EXIT
 :PRINT_ARR_END
 
 :PRINT_MAT
-	for /l %%y in (1,1,%height%) do (
+	for /l %%y in (0,1,%height%) do (
 		set output_str=
 		set tmp_str=
 		for /l %%x in (0,1,%width%) do (
