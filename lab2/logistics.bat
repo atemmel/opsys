@@ -5,41 +5,36 @@
 @echo  off
 setlocal EnableDelayedExpansion
 
-set length=0
-for /f "tokens=4 delims=, " %%a in (windata.txt) do (
-	set arr_%length%=%%a
-	set /A length+=1
-)
 
-echo %length%
 
-for /L %%a in (0,1,%length%) do (
-	set lhs=%%a
-	for /L %%b in (0,1,%length%) do (	
-	
-		set rhs=%%b
-		echo !lhs!
-		echo !rhs!
-		if /I !lhs! LSS !rhs! goto pass
-		set tmp=!lhs!
-		
-		:pass
-		
+::goto EXIT
+
+:OPEN_FILE
+	set length=0
+	for /f "tokens=4 delims=," %%a in (windata.txt) do (
+		set arr_!length!=%%a
+		set /A length+=1
 	)
-)
+	set /A length-=1
+:OPEN_FILE_END
 
-for /L %%c in (0,1,%length%) do echo !arr_%%c!
+:BUBBLE
+	for /l %%a in (0,1,%length%) do (
+		set i=%%a
+		for /l %%b in (0,1,%length%) do (	
+			set j=%%b
+			if /i !arr_%%a! LSS !arr_%%b! (
+				set tmp=!arr_%%a!
+				set arr_!i!=!arr_%%b!
+				set arr_!j!=!tmp!
+			)
+		)
+	)
+:BUBBLE_END
+
+:PRINT_ARR
+	for /l %%c in (0,1,%length%) do echo !arr_%%c!
+:PRINT_ARR_END
 
 
-:setlocal EnableDelayedExpansion
-:for /l %%i in (1, 1, 10) do (
- : set array_%%i=!random!
-:)
-
-:for /l %%i in (1, 1, 10) do (
- : echo !array_%%i!
-:)
-
-::set j=0
-::for /f %%a in 
-
+:EXIT
