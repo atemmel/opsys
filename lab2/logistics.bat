@@ -12,13 +12,9 @@ set col_to_read=
 	set /a width-=1
 	set /a height-=1
 	
-	::echo %width%
-	::echo %height%
-	
 	for /l %%a in (0,1,%width%) do (
 		set col_to_read=%%a
 		call :OPEN_FILE
-		echo !length!
 		for /l %%b in (0,1,!length!) do (
 			set mat_%%a_%%b=!arr_%%b!
 		)
@@ -56,19 +52,30 @@ goto EXIT
 	goto :EOF
 :BUBBLE_END
 
+:SWAP
+	for /l %%x in (0,1,%width%) do (
+		set tmp=!mat_%%x_%i%!
+		echo !tmp!
+	)
+	goto :EOF
+:SWAP_END
+
 :PRINT_ARR
 	for /l %%c in (0,1,%length%) do echo !arr_%%c!
 	goto :EOF
 :PRINT_ARR_END
 
 :PRINT_MAT
-	for /l %%a in (0,1,%width%) do (
-		for /l %%b in (1,1,%height%) do (
-			echo column %%a row %%b !mat_%%a_%%b!
+	for /l %%y in (1,1,%height%) do (
+		set output_str=
+		set tmp_str=
+		for /l %%x in (0,1,%width%) do (
+			set tmp_str=!output_str!
+			set output_str=!tmp_str!  !mat_%%x_%%y!
 		)
+		echo !output_str!
 	)
 	goto :EOF
 :PRINT_MAT_END
-
 
 :EXIT
