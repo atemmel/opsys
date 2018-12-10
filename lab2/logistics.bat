@@ -21,14 +21,18 @@ set col_to_read=
 		)
 	)
 
-	set col_to_read=0
-	call :OPEN_FILE
+	set col_to_read=1
+	::call :OPEN_FILE
 	
-	call :BUBBLE
+	::call :BUBBLE
 	
-	call :PRINT_MAT
+	::call :PRINT_MAT
 	
 	::call :PRINT_ARR
+
+	set strlen_input=james
+	call :STRLEN
+	echo %strlen%
 
 	goto :EOF
 :OPEN_FILE_MATRIX_END
@@ -70,6 +74,15 @@ goto EXIT
 	)
 	goto :EOF
 :SWAP_END
+
+:STRLEN
+	set strlen=0
+	:STRLEN_NEXT
+		set /a strlen+=1
+		if "!strlen_input:~%strlen%,1!" NEQ "" goto :STRLEN_NEXT
+	:STRLEN_NEXT_END
+	goto :EOF
+:STRLEN_END
 
 :PRINT_ARR
 	for /l %%c in (0,1,%length%) do echo !arr_%%c!
