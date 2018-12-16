@@ -4,8 +4,14 @@ setlocal EnableDelayedExpansion
 chcp 1252>nul
 
 set file=windata.txt
-set width=6
 set height=7
+set width=6
+set col_w_0=3
+set col_w_1=12
+set col_w_2=5
+set col_w_3=3
+set col_w_4=3
+set col_w_5=3
 set length=
 set col_to_read=
 
@@ -22,17 +28,13 @@ set col_to_read=
 	)
 
 	set col_to_read=1
-	::call :OPEN_FILE
+	call :OPEN_FILE
 	
-	::call :BUBBLE
+	call :BUBBLE
 	
-	::call :PRINT_MAT
+	call :PRINT_MAT
 	
 	::call :PRINT_ARR
-
-	set strlen_input=james
-	call :STRLEN
-	echo %strlen%
 
 	goto :EOF
 :OPEN_FILE_MATRIX_END
@@ -94,12 +96,25 @@ goto EXIT
 		set output_str=
 		set tmp_str=
 		for /l %%x in (0,1,%width%) do (
+			set n_space=!col_w_%%x!
+			set strlen_input=!mat_%%x_%%y!
+			call :STRLEN
+			set /a n_space-=strlen
+			call :MAKE_N_SPACE
 			set tmp_str=!output_str!
-			set output_str=!tmp_str!  !mat_%%x_%%y!
+			set output_str=!tmp_str!!mat_%%x_%%y! !space_str!
 		)
 		echo !output_str!
 	)
 	goto :EOF
 :PRINT_MAT_END
+
+:MAKE_N_SPACE
+	set space_str=
+	for /l %%x in (1,1,%n_space%) do (
+		set tmp_str=!space_str!
+		set space_str= !tmp_str!
+	)
+:MAKE_N_SPACE_END
 
 :EXIT
