@@ -6,7 +6,7 @@ SEP=','
 TABLE='BEGIN{printf("%3s\t%12s\t%5s\t%3s\t%3s\t%3s\n","ID","Name","Weight","L","B","H")}{printf("%3s\t%12s\t%5d\t%3d\t%3d\t%3d\n",$1,$2,$3,$4,$5,$6)}'
 
 usage() { 
-	echo "Usage: logistics  FILE [-b|-p|-s {i|n|v|l|b|h}]
+	echo "Usage: logistics  [-f {FILE} -b|-p|-s {i|n|v|l|b|h}]
 Used  for  logistics  management  with  FILE as  underlying
 data.
 -b       generate  backup  copy of data  contents
@@ -70,7 +70,7 @@ filenotset(){
 	echo "Error, file is not set. Set file with 'f'"
 }
 
-if [ -z "$1" ] ; then
+if [ -z "$1" ]; then
 	interactive_help;
 	while true ; do
 		read input;
@@ -137,3 +137,8 @@ while getopts "hbps:f:" o; do
 	
 done
 
+# Hjälptext vid varje steg i interaktivt läge
+# Fil ska anges vid start av interaktivt läge
+# Hårdkodad backupfil
+# H ger hjälp för atcjläge
+# /? skall gå att köra med fil
