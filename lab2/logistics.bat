@@ -21,7 +21,6 @@ set header=ID  NAME         VIKT  L   B   H
 
 :READ_ARGS
 	if "%1" == "" (
-		call :PRINT_HELP_INTERACTIVE
 		goto :INTERACTIVE
 	)
 	if "%1" == "/?" (
@@ -66,12 +65,8 @@ set header=ID  NAME         VIKT  L   B   H
 )
 
 :INTERACTIVE
-	choice /c FPSBQH
-
-	if ERRORLEVEL 6 (
-		call :PRINT_HELP_INTERACTIVE
-		goto :INTERACTIVE
-	)
+	call :PRINT_HELP_INTERACTIVE
+	choice /c FPSBQ
 
 	if ERRORLEVEL 5 goto :EXIT
 
@@ -269,15 +264,18 @@ goto EXIT
 :MAKE_N_SPACE_END
 
 :PRINT_HELP
-	echo Används för logistikhantering
+	echo Används för logistikhantering.
 	echo.
-	echo Syntax logistics [enhet:]sökväg /backup, /print , /sort i n v l b h
+	echo Syntax : logistics [ enhet :] sökväg [^/backup ^| ^/print ^| ^/sort ^<i ^| n ^| v ^| l ^| b ^| h ^>^]
 	echo.
-	echo /backup	Genererar backupfil enligt argument
-	echo /print		Skriver ut innehåll i filen
-	echo /sort		Sorterar och skriver ut innehåll i filen
-	echo i = id [] n = name [] v = weight [] l = length [] b = width [] h = height
-	echo.
+	echo /backup     Genererar en säkerhetskopia av datafilen i samma katalog.
+	echo /print      Skriver ut innehållet i datafilen.
+	echo /sort       Sorterar och skriver ut innehållet i datafilen.
+	echo              i efter produktnummer     n efter namn
+	echo              v efter vikt              l efter längd
+	echo              b efter bredd             h efter höjd
+	echo:/?          Skriver ut den här hjälptexten.
+
 
 	goto :EOF
 :PRINT_HELP_END
