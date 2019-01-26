@@ -6,7 +6,7 @@ SEP=','
 TABLE='BEGIN{printf("%3s\t%12s\t%5s\t%3s\t%3s\t%3s\n","ID","Name","Weight","L","B","H")}{printf("%3s\t%12s\t%5d\t%3d\t%3d\t%3d\n",$1,$2,$3,$4,$5,$6)}'
 
 usage() { 
-	echo "Usage: logistics  [-f {FILE} -b|-p|-s {i|n|v|l|b|h}]
+	echo "Usage: logistics  [-b|-p|-s {i|n|v|l|b|h}]
 Used  for  logistics  management  with  FILE as  underlying
 data.
 -b       generate  backup  copy of data  contents
@@ -71,8 +71,8 @@ filenotset(){
 }
 
 if [ -z "$1" ]; then
-	interactive_help;
 	while true ; do
+		interactive_help;
 		read input;
 
 		case $input in
@@ -118,27 +118,32 @@ if [ -z "$1" ]; then
 	done
 fi
 
+if [ -z "$1" ] || [ -z "$2" ] ; then
+	echo "Unrecognized command, type 'h' for help"
+	exit 1
+fi
 
-while getopts "hbps:f:" o; do
+FILE="$1"
 
-	case $o in
-		b) backup_table; 
-			exit;;
-		p) print_table; exit;;
-		s) COLUMN=$OPTARG; 
-			sort_table; 
-			exit;;
-		f) FILE=$OPTARG;;
+case "$2" in
+	"-b") 
+		backup_table; 
+		exit;;
+	"-p") 
+		print_table; 
+		exit;;
+	"-s") 
+		if [ -z "$3" ] ; then
+			echo "Option -s requires additional arg to sort by"
+			exit
+		fi
 
-		h) ;;&
-		?) usage; 
-			exit;;
-	esac
-	
-done
-
-# Hjälptext vid varje steg i interaktivt läge BATCH[x] BASH[ ]
-# Fil ska anges vid start av interaktivt läge BATCH[x] BASH[ ]
-# Hårdkodad backupfil BATCH[x] BASH[ ]
-# H ger hjälp för atcjläge BATCH[x] BASH[ ]
-# /? skall gå att köra med fil BATCH [x] BASH ]
+		COLUMN="$3" 
+		sort_table; 
+		exit;;
+	"-h") 
+		;;&
+	*) 
+		usage; 
+		exit;;
+esac
