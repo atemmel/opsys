@@ -137,8 +137,8 @@ while getopts "hbps:f:" o; do
 	
 done
 
-# Hjälptext vid varje steg i interaktivt läge
-# Fil ska anges vid start av interaktivt läge
-# Hårdkodad backupfil
-# H ger hjälp för atcjläge
-# /? skall gå att köra med fil
+# Hjälptext vid varje steg i interaktivt läge BATCH[x] BASH[ ]
+# Fil ska anges vid start av interaktivt läge BATCH[x] BASH[ ]
+# Hårdkodad backupfil BATCH[x] BASH[ ]
+# H ger hjälp för atcjläge BATCH[x] BASH[ ]
+# /? skall gå att köra med fil BATCH [x] BASH ]

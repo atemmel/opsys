@@ -33,8 +33,20 @@ set header=ID  NAME         VIKT  L   B   H
 	set file=%1
 	call :OPEN_FILE_MATRIX
 
+	if "%2" == "/?" (
+		call :PRINT_HELP
+		goto :EXIT
+	)
+
 	if /i "%2" == "/print" (
 		call :PRINT_MAT
+		goto :EXIT
+	)
+
+	if /i "%2" == "/backup" (
+		set  backup_file=windata.backup
+		call :BACKUP
+		echo !file! copied to !backup_file!
 		goto :EXIT
 	)
 
@@ -56,10 +68,6 @@ set header=ID  NAME         VIKT  L   B   H
 		
 		goto :EXIT
 	)
-	if /i "%2" == "/backup" (
-		set  backup_file=%3
-		call :BACKUP
-	)
 
 	goto :EXIT
 )
@@ -78,8 +86,6 @@ set header=ID  NAME         VIKT  L   B   H
 			echo.
 			goto :INTERACTIVE
 		)
-		echo.
-		set /p backup_file="Enter name of backup file: "
 		echo.
 		call :BACKUP
 		echo.
