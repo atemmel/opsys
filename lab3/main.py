@@ -2,18 +2,26 @@ from threading import Thread, Lock
 from datetime import datetime
 import time
 
-
+# 2
 shared_resource = ""
 lock = Lock()
 
+# 1
 modify_readers = Lock();
 n_readers = 0;
 
-def wait(): time.sleep(2)
+# 3
+fifo_lock = Lock()
+
+def wait(): 
+    time.sleep(2)
+###
 
 def acquire_reader():
-    global n_readers, modify_readers
+    global n_readers, modify_readers, fifo_lock
+    fifo_lock.acquire()
     modify_readers.acquire()
+    fifo_lock.release()
 
     n_readers += 1;
     if(n_readers == 1): lock.acquire()
@@ -22,7 +30,7 @@ def acquire_reader():
 ###
 
 def release_reader():
-    global n_readers, modify_readers
+    global n_readers, modify_readers, fifo_lock
     modify_readers.acquire()
 
     n_readers -= 1;
@@ -33,10 +41,13 @@ def release_reader():
 
 def write_normal():
     while True:
+        global shared_resource, fifo_lock
+
+        fifo_lock.acquire()
         lock.acquire()
+        fifo_lock.release()
 
         print("Writing normal")
-        global shared_resource
         shared_resource = datetime.now()
 
         lock.release()
@@ -45,10 +56,13 @@ def write_normal():
 
 def write_reverse():
     while True:
+        global shared_resource, fifo_lock
+
+        fifo_lock.acquire()
         lock.acquire()
+        fifo_lock.release()
 
         print("Writing reverse")
-        global shared_resource
         shared_resource = str(datetime.now() )[::-1]
 
         lock.release()
@@ -57,10 +71,10 @@ def write_reverse():
 
 def read():
     while True:
+        global shared_resource
         acquire_reader();
 
         #print("Reading")
-        global shared_resource
         print(shared_resource);
 
         release_reader();
