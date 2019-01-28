@@ -12,9 +12,9 @@ n_readers = 0;
 def wait(): time.sleep(2)
 
 def acquire_reader():
+    global n_readers, modify_readers
     modify_readers.acquire()
 
-    global n_readers
     n_readers += 1;
     if(n_readers == 1): lock.acquire()
 
@@ -22,9 +22,9 @@ def acquire_reader():
 ###
 
 def release_reader():
+    global n_readers, modify_readers
     modify_readers.acquire()
 
-    global n_readers
     n_readers -= 1;
     if(n_readers == 0): lock.release()
 
@@ -59,7 +59,7 @@ def read():
     while True:
         acquire_reader();
 
-        print("Reading")
+        #print("Reading")
         global shared_resource
         print(shared_resource);
 
